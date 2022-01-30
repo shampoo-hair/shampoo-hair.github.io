@@ -1,0 +1,111 @@
+.main-img {
+	float: left;
+	margin-right: 20px;
+}
+.facebookbox
+	{
+		margin-top: 10px;
+	}
+
+.cont h3{
+	margin: 5px 0 10px;
+}
+.cont-plus {
+  padding: 15px 0 0;
+}
+.cont-plus .c-text {
+	padding-left:10px;
+}
+.paddingleft {
+	padding-left:10px;
+	max-width: 400px;
+	float: left;
+}
+.blue_dots {
+    margin-top:20px;
+    margin-left: 30px;
+    list-style-type: none;
+	line-height: 16px;
+}
+.blue_dots li:before {
+    content: "•";
+    margin-right: 10px;
+    font-weight: bold;
+    color: #26759e;
+    font-size: 30px;
+}
+.blue_dots li:last-child {
+    padding-bottom: 16px;
+}
+.erect{
+	margin: 10px auto 20px;
+	position: relative;
+  max-width:534px;
+}
+
+.erect h2{
+	margin-bottom: 10px;
+	text-align: center;
+}
+.erect img{
+	display: block;
+	margin: auto;
+  width: 100%;
+}
+/*.erect p{
+	width: 400px;
+	background: #EEE;
+	border: 1px solid #CCC;
+	margin: 0 auto;
+	padding: 5px;
+}*/
+.erect .before {
+   position:absolute;
+   width: 50%;
+   left: 0;
+   text-align: center;
+   font-weight: bold;
+   font-size: 20px;
+   color:black;
+}
+.erect .after {
+  right: 0;
+   position:absolute;
+   width: 50%;
+   text-align: center;
+   font-weight: bold;
+   font-size: 20px;
+   color: black;
+    text-shadow:
+    -1px -1px 0 white,
+    1px -1px 0 white,
+    -1px 1px 0 white,
+    1px 1px 0 white; 
+}
+
+.box_1 {
+	border: 1px solid #5e5e5e;
+    background: #e9e9e9;
+    padding: 15px 15px 0px 15px;
+    width: 230px !important;
+    float: right !important;
+    margin-left: 20px;
+    margin-bottom: 10px;
+    margin-top: 20px;
+}
+.box_1 img {
+	width: 100px;
+    display: block;
+    float: left;
+    margin-right: 12px;
+
+}
+.box_1 p {
+
+}
+.box_1 .info h3 {
+	border-left: solid #5C85D7 1px;
+padding-left: 10px;
+overflow: hidden;
+font-size: medium;
+}
