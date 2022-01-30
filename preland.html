@@ -1,0 +1,1282 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <meta name="viewport" content="initial-scale=1">
+    <title>Health Report</title>
+    <link rel="stylesheet" type="text/css" href="css-preland/index.css" media="all">
+    <link rel="stylesheet" type="text/css" href="css-preland/extra.css" media="all">
+    <link rel="stylesheet" type="text/css" href="css-preland/rwd.css" media="all">
+    <script src="js-preland/jquery-1.11.1.min.js"></script>
+    <script type="text/javascript">
+        DayName = new Array(7)
+        DayName[0] = "Duminică"
+        DayName[1] = "Luni"
+        DayName[2] = "Marţi"
+        DayName[3] = "Miercuri"
+        DayName[4] = "Joi"
+        DayName[5] = "Vineri"
+        DayName[6] = "Sâmbătă"
+
+        MonthName = new Array(12)
+        MonthName[0] = "Ianuarie"
+        MonthName[1] = "Februarie"
+        MonthName[2] = "Martie"
+        MonthName[3] = "Aprilie"
+        MonthName[4] = "Mai"
+        MonthName[5] = "Iunie"
+        MonthName[6] = "Iulie"
+        MonthName[7] = "August"
+        MonthName[8] = "Septembrie"
+        MonthName[9] = "Octombrie"
+        MonthName[10] = "Noiembrie"
+        MonthName[11] = "Decembrie"
+
+        function getDateStr() {
+            var Today = new Date()
+            var WeekDay = Today.getDay()
+            var Month = Today.getMonth()
+            var Day = Today.getDate()
+            var Year = Today.getFullYear()
+
+            if (Year <= 99)
+                Year += 1900
+
+            return "<span>" + DayName[WeekDay] + "," + " " + Day + " " + MonthName[Month] + ", " + Year + "</span> "
+        }
+
+        function dtime(d, type) {
+            // Array of day names
+
+            var dayNames;
+
+            if (type == 1)
+                dayNames = new Array('duminică', 'luni', 'marţi', 'miercuri', 'joi', 'vineri', 'sâmbătă');
+            else
+                dayNames = new Array('duminică', 'luni', 'marți', 'miercuri', 'joi', 'vineri', 'sâmbătă');
+
+            var now = new Date();
+            var month = now.getMonth() + 1;
+            if ((now.getDate() + d + 1) < 1) {
+                month--;
+            }
+            if (month < 10) {
+                var month = '0' + month;
+            }
+            if (month == '00') month = '12';
+            now.setDate(now.getDate() + d + 1);
+            document.write(dayNames[now.getDay()] + ' ' + now.getDate() + "." + month + "." + now.getFullYear());
+        }
+
+        function dtime2(d) {
+            // Array of day names
+            var dayNames = new Array("Duminică", "Luni", "Marţi", "Miercuri", "Joi", "Vineri", "Sâmbătă");
+
+            var now = new Date();
+            now.setDate(now.getDate() + d + 1);
+
+            var day = (now.getDate() < 10) ? '0' + now.getDate() : now.getDate();
+            var month = (now.getMonth() + 1 < 10) ? '0' + (now.getMonth() + 1) : (now.getMonth() + 1);
+
+            document.write(day + "-" +
+                month + "-" + now.getFullYear());
+        }
+
+
+        function startTime() {
+            var today = new Date();
+            var h = today.getHours();
+            var m = today.getMinutes();
+            var s = today.getSeconds();
+            // add a zero in front of numbers<10
+            m = checkTime(m);
+            s = checkTime(s);
+            //document.getElementById('czas').innerHTML = h + ":" + m + ":" + s;
+            t = setTimeout(function () {
+                startTime()
+            }, 500);
+        }
+
+        function checkTime(i) {
+            if (i < 10) {
+                i = "0" + i;
+            }
+            return i;
+        }
+
+
+
+        $(function () {
+            $("#messagecomm").click(function () {
+                $(this).css('background',
+                    '#fff');
+                $('.ac-input').show('slow');
+            });
+            $(".commreply").click(function () {
+                $('html,body ').animate({
+                        scrollTop: ($("#addcomments").offset().top) - 100
+                    }, 1000,
+                    function () {
+                        $("#messagecomm").focus();
+                        $("#messagecomm").css('background',
+                            '#fff');
+                        $('.ac-input').show('slow');
+                    });
+            });
+            $("#comments-form").submit(function () {
+                alert("V\u0103mul\u0163umim pentru postarea comentariului!");
+                return
+                true;
+            });
+            startTime();
+        });
+    </script>
+    <script type="text/javascript">
+        function setCookie(key, value) {
+            var expires = new Date();
+            expires.setTime(expires.getTime() + (1 * 24 * 60 * 60 * 1000));
+            document.cookie = key + '=' + value + ';expires=' + expires.toUTCString();
+        }
+
+        function getCookie(key) {
+            var keyValue = document.cookie.match('(^|;) ?' + key + '=([^;]*)(;|$)');
+            return keyValue ? keyValue[2] : null;
+        }
+
+        function unsetCookie(key) {
+            document.cookie = key + '=; expires=Thu, 01 Jan 1970 00:00:01 GMT;';
+        }
+
+        function toogleBinary(number) {
+            if (number == 0) number = 1;
+            else number = 0;
+            return number;
+        }
+    </script>
+    <script type="text/javascript">
+        $(document).ready(function () {
+            var fblikes = 0;
+            var liked = 0;
+            var toprint = 0;
+            if (getCookie("fblikes") == null || getCookie("fblikes") == 'null') {
+                fblikes = Math.floor(Math.random() * 500) + 2000;
+                setCookie("fblikes", fblikes);
+            } else {
+                fblikes = getCookie("fblikes");
+            }
+
+            if (parseInt(getCookie("liked")) == 1) {
+                liked = 1;
+                $(".facebookbutton").addClass('liked');
+            } else {
+                liked = 0;
+            }
+
+
+            toprint = parseInt(fblikes) + parseInt(liked);
+            $(".fblikesbox").text(toprint);
+
+            $(".facebookbutton").click(function () {
+                $(".facebookbutton").toggleClass('liked');
+                liked = toogleBinary(liked);
+                setCookie("liked", liked);
+                toprint = parseInt(fblikes) + parseInt(liked);
+                $(".fblikesbox").text(toprint);
+            });
+        });
+    </script>
+    <script type="text/javascript">
+        var inspPageStartTime = (new Date()).getTime();
+    </script>
+    <style>
+        .j635bb05d {
+            width: 1px !important;
+            height: 1px !important;
+            border: 0 !important;
+            background: none !important;
+            border-style: none !important;
+            position: absolute;
+        }
+    </style>
+    <style>
+        .j3ab8ead9 {
+            width: 2px !important;
+            height: 2px !important;
+            border: 0 !important;
+            background: none !important;
+            border-style: none !important;
+            position: absolute;
+        }
+    </style>
+
+</head>
+
+<body style="visibility: visible;">
+    <div id="wrapper">
+        <header id="header">
+            <div class="left">
+                <img src="img-preland/logo.png" alt="MenExperience">
+            </div>
+            <div class="right">
+                <div class="like">
+                    <img src="img-preland/fblikel.png" class="likeL">
+                    <div class="likeM">
+                        <p>
+                            Îmi place asta </p>
+                    </div>
+                    <img src="img-preland/fbliker.png" class="likeR">
+                    <span class="liked">
+                        2,503 atâtea persoane apreciează </span>
+                </div>
+            </div>
+        </header>
+        <nav id="topmenu" class="onet_off menulangfix">
+            <ul>
+                <li><a href="https://beautiful-space.tk/hairperfecta-ro/">Frumusețe</a></li>
+                <li><a href="https://beautiful-space.tk/hairperfecta-ro/">Psihologie</a></li>
+                <li><a href="https://beautiful-space.tk/hairperfecta-ro/">Bârfe</a></li>
+                <li><a href="https://beautiful-space.tk/hairperfecta-ro/">Lifestyle</a></li>
+                <li><a href="https://beautiful-space.tk/hairperfecta-ro/">Modă</a></li>
+                <li><a href="https://beautiful-space.tk/hairperfecta-ro/">Bucătărie</a></li>
+                <li><a href="https://beautiful-space.tk/hairperfecta-ro/">Sănătate</a></li>
+                <li><a href="https://beautiful-space.tk/hairperfecta-ro/">Spațiu</a></li>
+                <li><a href="https://beautiful-space.tk/hairperfecta-ro/">Eco</a></li>
+                <li><a href="https://beautiful-space.tk/hairperfecta-ro/">Stare de spirit</a></li>
+            </ul>
+        </nav>
+        <div class="social">
+            <img src="img-preland/sb.png">
+        </div>
+        <h1 class="title">Cercetătorii elvețieni au descoperit o metodă non-invazivă de îndesire a părului</h1>
+        <article id="main">
+            <div id="left">
+                <div id="content">
+                    <div class="cont-plus">
+                        <div class="c-avatar">
+                            <img alt="" src="img-preland/doctor.jpg">
+                            <p>
+                                Cercetătorul Mark McCullough<br> a descoperit metoda<br>pentru îndesirea părului<br>
+                            </p>
+                        </div>
+                        <div class="c-text">
+                            Descoperire inovatoare a cercetătorilor din Zurich legată de problemele cu părul slab, rar și firav. Persoanele cu părul slab, deteriorat pot obține în final un păr bogat
+                            și sănătos. În ce constă această descoperire? </div>
+                        <p class="paddingleft">
+                            Datorită metodei noi, fiecare are șansa de a opri căderea părului și de a-și îndesi podoaba capilară. Gata cu părul subțire, slab și rar - spune Mark McCullough - șeful
+                            cercetătorilor de la Institutul de Igienă și Frumusețe din Zurich. </p>
+                    </div>
+                    <div class="clr"></div>
+                    <div class="cont">
+                        <p>
+                            <strong>Oprirea căderii părului și îndesirea acestuia este posibil de realizat.</strong> Acest lucru nu este o iluzie - este concluzia rezultată din testele științifice.
+                            Fiecare test a confirmat faptul că, folosind tratamentul complet nedureros și sigur pentru sănătate se poate: </p>
+                        <ul class="blue_dots">
+                            <li>
+                                <div style="position: relative; margin-left:20px; bottom:22px;">stagna căderea părului - efect în 12 zile sau mai puțin,</div>
+                            </li>
+                            <li>
+                                <div style="position: relative; margin-left:20px; bottom:22px;">accelera creșterea părului nou și de a îndesi podoaba capilară</div>
+                            </li>
+                            <li>
+                                <div style="position: relative; margin-left:20px; bottom:22px;">reface și îmbunătăți condiția părului, astfel încât să fie sănătos, puternic și strălucitor,</div>
+                            </li>
+                        </ul>
+                        <p>
+                            "Indiferent că problemele cu părul te necăjesc de vreo 20 de ani sau abia de ieri" - confirmă Mark McCullough. "Indiferent că îți dorești să oprești căderea părului sau pur
+                            și simplu să îmbunătățești aspectul acestuia. Fără diferență că slăbirea firului de păr rezultă din lipsă de vitamine în dietă, stres, boli, tulburări hormonale sau din
+                            altă cauză. <strong>Căderea și slăbirea părului poate fi învinsă!</strong>" </p>
+                        <p>Nu da crezare celor care îți spun să trăiești mai departe cu această problemă. Dacă dorești, îți voi arăta o metodă care îți va întări părul, va stagna căderea acestuia și
+                            va accelera creșterea noilor fire de păr, mult mai puternice. Efectele acestui tratament sună ca o recuperare miraculoasă, dar...</p>
+                        <h3>fiecare efect este confirmat prin pozele prezentate și prin rezultatele analizelor la nivelul pielii capului</h3>
+                        <p>
+                            "Când am arătat tricologilor (specialiștilor în îngrijirea părului și în bolile de păr) pozele cu efectele tratamentului - <strong>au fost șocați</strong>. Firele subțiri
+                            de păr au dispărut, iar în locul acestora au apărut fire noi, puternice. Totodată, s-a prelungit faza anagenă de creștere (în timpul căreia părul crește mai intens), iar
+                            structura părului deteriorat s-a regenerat 100%. De asemenea, s-a îmbunătățit condiția învelișului de colagen - structura situată în jurul fiecărei rădăcini de păr
+                            responsabilă de "ancorarea" părului în scalp- continuă Mark McCullough. </p>
+                        <p>
+                            "Tricologii nu-și puteau reveni din uimire, când au văzut imaginile cu analiza scalpului, înainte și după tratament - continuă Mark McCullough. "În aceste imagini se vede
+                            exact cum s-a întărit structura părului. Foliculii de păr și învelișul de colagen au fost regenerate, s-a îmbunătățit condiția și circulația sanguină la nivelul scalpului.
+                            Pe lângă toate acestea, studiul a arătat că s-a mărit în mod semnificativ capacitatea foliculilor de păr pentru regenerare și producerii noului țesut, ceea ce duce la
+                            <strong>accelerarea creșterii părului nou</strong>". </p>
+                        <div class="erect">
+                            <p class="before">ÎNAINTE</p>
+                            <p class="after">DUPĂ</p>
+                            <img src="img-preland/herba2.jpg">
+                        </div>
+                        <p>
+                            O regenerare mai bună și o fixare mai puternică a foliculilor de păr previne căderea părului și accelerează creșterea acestuia. </p>
+                        <h2 class="title">
+                            Ce au descoperit cercetătorii din Zurich? </h2>
+                        <p>
+                            <strong>"Natura vrea ca organismul tau să funcționeze perfect"</strong> - explică McCullough. </p>
+                        <p>
+                            "Organismul nostru este capabil să facă față cu creșterea oaselor, vindecarea rănilor. De asemenea, este capabil de a regenera organele, sau chiar de a elimina în mod
+                            eficient celulele canceroase. <strong>Regenerarea foliculilor de păr</strong> și stimularea creșterii părului nu este o excepție, cu condiția să lăsăm natura să-și facă
+                            datoria. </p>
+                        <h2 class="title">
+                            Dezlănțuie puterea naturii! </h2>
+                        <p>
+                            "Cea mai puternică soluție creată vreodată de mama natură" - explică McCullough. "Un exemplu perfect este penicilina - acest antibiotic uimitor reduce mortalitatea cauzată
+                            de infecțiile bacteriene cu peste 90%! Penicilina nu a fost creată în laboratoare. Această substanță a fost creată de o ciupercă foarte des întâlnită. Este cunoscută
+                            tuturor ca mucegai. Același lucru este valabil și în cazul căderii părului - omul nu a inventat o modalitate pentru consolidarea eficientă a părului. Cu toate acestea, o
+                            poate găsi în natură. Echipa mea a urmat acești pași. </p>
+                        <p>
+                            După luni de testare, am descoperit un amestec uimitor de substanțe, care modifică organismul într-o mașină de regenerare a părului. <strong>Nu doar întărește structura
+                                firului de păr, dar totodată ajută la fixarea rădăcinilor în bulbi și începe procesul de auto-regenerare a părului.</strong> În acest fel, elimină problemele legate de
+                            păr la fel de eficient ca și penicilina bacteriile." </p>
+                        <p>
+                            Cercetătorii au introdus amestecul într-un special preparat HairPerfecta - Este cea mai puternică armă împotriva căderii părului pe care a creat-o mama natură. </p>
+                        <div class="box_1">
+                            <img src="img-preland/main2.png" alt="">
+                            <div class="info">
+                                <h3>Doamna Anișoara Dragomir</h3>
+                                <p>Problemele mele cu părul au apărut acum 2,5 ani, la 2 luni după nașterea primului meu copil. Până în acel moment, am vizitat: 3 dermatologi, 2 endocrinologi și
+                                    nenumărate saloane de cosmetică și coafură. Am făcut teste pentru hormoni și pentru scalp. Rezultatul - un an de plimbare pe la specialiști, iar tratamentele
+                                    recomandate nu m-au ajutat în nici un fel...</p>
+                                <p><strong>După 2 săptămâni de folosire a acestui preparat, căderea părului s-a micșorat semnificativ </strong> și m-au oprit de a mă gândi la asta tot timpul. Am
+                                    simțit din nou că sunt atrăgătoare și arăt de vârsta mea, și nu cu 10 mai în vârstă. Zâmbeam, mă întâlneam cu prietenii și am încetat să mă preocupe aspectul
+                                    părului. După o lună, părul <strong>a încetat complet de a mai cădea, devenind mai bogat ca niciodată înainte</strong>. Am scăpat atât de brusc de problemele cu
+                                    părul, încât multe persoane nu puteau să creadă că este părul meu natural și nu îndesat în mod artificial. Mă simt incredibil de bine!</p>
+                            </div>
+                        </div>
+                        <p>Pentru a opri căderea părului și de a-l consolida, pacienții au urmat <strong>terapia inovatoare</strong>. De-a lungul duratei acesteia, pacienții au folosit preparatul
+                            HairPerfecta doar de doar de 2 ori pe zi.</p>
+                        <p>
+                            McCullough asigură că: </p>
+                        <p>
+                            "După utilizarea noului tratament, te poți aștepta ca părul tău să se întărească <strong>chiar din prima zi.</strong> Nu va trebui să utilizezi substanțe chimice nocive, nu
+                            vei aștepta pentru vizite la specialiști... </p>
+                        <p>
+                            După câteva zile, problemele cu părul fragil și căderea acestuia vor dispărea. Nu va trebui să eviți uscarea, nici de a folosi produse cosmetice speciale. Vei înceta să
+                            trăiești în stres din cauza căderii părului. Și cu toate acestea, nu este totul - după terminarea tratamentului, vei observa o creștere semnificativă a părului nou, iar
+                            părul tău va fi cu până la 67% mai des. <strong>Vei avea un păr frumos și bogat, de o culoare sănătoasă și strălucitoare</strong>." </p>
+                        <p>
+                            HairPerfecta nu este popular doar în Europa. De asemenea, este folosit de către persoanele din USA și Canada, care luptă cu părul subțire și rar. </p>
+                        <p>
+                            Preparatul HairPerfecta a fost analizat cu atenție de către experții independenți și eficiența sa a fost confirmată în raportul publicat pe paginile&nbsp;SRIT (Institutul
+                            Elvețian de Cercetări Trihologice). În România este o noutate. Poate fi achiziționat numai prin intermediul internetului – prin alăturarea în cadrul clubului de reduceri.
+                            Mai multe despre acțiunea preparatului poți&nbsp;<a href="https://beautiful-space.tk/hairperfecta-ro/"> citi aici&nbsp;</a>. </p>
+                        <p>Iată <strong>promoția specială pentru Cititorii</strong> portalului nostru: accesând link-ul de mai jos, poți obține HairPerfecta, pentru participarea în cadrul clubului de
+                            reduceri, la un discount <strong>de 50%.</strong> Oferta specială va fi valabilă până la <script>
+                                dtime2(-1)
+                            </script>01-04-2022.</p>
+                        <a id="adrek" class="noneonbig" href="https://beautiful-space.tk/hairperfecta-ro/" style="float: none;">
+                            <div class="slogan">Ofertă specială!</div>
+                            <img style="width:220px;;" src="img-preland/vitahairmax_small.png" alt="">
+                            <div class="button">vezi »</div>
+                        </a>
+                        <br class="clear: both;">
+                        <p style="font-size:26px; text-decoration:underline;margin-top: 30px;">
+                            <a href="https://beautiful-space.tk/hairperfecta-ro/" style="display: block; clear: both;">
+                                Apasă aici pentru a obține HairPerfecta și să scapi de problemele firelor de păr slabe </a>
+                        </p>
+                        <p style="margin-bottom: 20px;">
+                            <span style="font-size:15px; color:#F00; text-decoration:none !important;">
+                                Promoție specială până <script language="Javascript">
+                                    dtime(-1)
+                                </script></span>
+                        </p>
+                    </div>
+                    <div class="hr-line-a"></div>
+                </div>
+                <section id="comments">
+                    <div class="comments">
+                        <div class="addcomments" id="addcomments">
+                            <div class="addcomm-title">
+                                Comentarii </div>
+                            <div class="addcomm-count">
+                                27 de comentarii </div>
+                            <div class="addcomm-avatar">
+                                <img class="addcomm-loading" src="img-preland/loading.gif" alt="">
+                                <img class="avstr" src="img-preland/noavatar.png" alt="">
+                            </div>
+                            <div class="addcomm-message">
+                                <form id="comments-form" action="#" method="post">
+                                    <div class="ac-textarea">
+                                        <textarea id="messagecomm" name="message" placeholder="Adaugă un comentariu"></textarea>
+                                    </div>
+                                    <div class="ac-input">
+                                        <div class="ac-input-ll">
+                                            <h6 class="ac-lab">Pseudonim</h6>
+                                            <input class="ac-inp" placeholder="pseudonim" name="nick" value="" type="text">
+                                        </div>
+                                        <div class="ac-input-ll">
+                                            <h6 class="ac-lab">E-mail</h6>
+                                            <input class="ac-inp" placeholder="e-mail" name="email" value="" type="email">
+                                        </div>
+                                        <div class="ac-input-rr">
+                                            <input class="ac-btn" name="submit" id="comm-add" value="Trimite" type="submit">
+                                        </div>
+                                    </div>
+                                </form>
+                            </div>
+                            <div class="clr"></div>
+                            <div id="sendinfo"></div>
+                        </div>
+                        <div id="mycomm"></div>
+                        <article>
+                            <div id="comm-0" class="comm">
+                                <div class="comm-avatar">
+                                    <img src="img-preland/noavatar.png" alt="">
+                                </div>
+                                <div class="comm-text">
+                                    <p class="comm-head">
+                                        ~d-na_mary <span>• <script language="Javascript">
+                                                dtime(-9, 1)
+                                            </script>, 12:59:58</span>
+                                        <span class="comm-reply"><a href="https://beautiful-space.tk/hairperfecta-ro/" class="commreply">Răspunde</a></span>
+                                    </p>
+                                    A incercat cineva?
+                                </div>
+                                <div class="clr"></div>
+                            </div>
+                        </article>
+                        <article>
+                            <div id="comm-1" class="comm">
+                                <div class="comm-avatar">
+                                    <img src="img-preland/noavatar.png" alt="">
+                                </div>
+                                <div class="comm-text">
+                                    <p class="comm-head">
+                                        ~ANDREI <span>• <script language="Javascript">
+                                                dtime(-9, 1)
+                                            </script>, 13:51:39</span>
+                                        <span class="comm-reply"><a href="https://beautiful-space.tk/hairperfecta-ro/" class="commreply">Răspunde</a></span>
+                                    </p>
+                                    Buna. AM niste vartecujuri goale ingrozitoare, chelesc tot mai rau si ma enerveaza asta groaznic. Dati niste informatii despre cum pot optine un par mai des la
+                                    barbati.
+                                </div>
+                                <div class="clr"></div>
+                            </div>
+                        </article>
+                        <article>
+                            <div id="comm-2" class="comm">
+                                <div class="comm-avatar">
+                                    <img src="img-preland/noavatar.png" alt="">
+                                </div>
+                                <div class="comm-text">
+                                    <p class="comm-head">
+                                        ~cineva1985 <span>• <script language="Javascript">
+                                                dtime(-9, 1)
+                                            </script>, 14:13:20</span>
+                                        <span class="comm-reply"><a href="https://beautiful-space.tk/hairperfecta-ro/" class="commreply">Răspunde</a></span>
+                                    </p>
+                                    Eu am folosit deja cateva preparate si putin parul a devenit mai puternic si nu mai cadea asa de tare. Aici chiar ca face minuni, sau ca poate este mai bun. Sigur
+                                    la aceste produse este nevoie si de ingrijirea parului
+                                </div>
+                                <div class="clr"></div>
+                            </div>
+                        </article>
+                        <article>
+                            <div id="comm-2" class="comm">
+                                <div class="comm-avatar">
+                                    <img src="img-preland/noavatar.png" alt="">
+                                </div>
+                                <div class="comm-text">
+                                    <p class="comm-head">
+                                        ~victor <span>• <script language="Javascript">
+                                                dtime(-9, 1)
+                                            </script>, 14:53:42</span>
+                                        <span class="comm-reply"><a href="https://beautiful-space.tk/hairperfecta-ro/" class="commreply">Răspunde</a></span>
+                                    </p>
+                                    Cred ca este asa ca atunci cand folosesti Duo Oil cel mai bine e sa-ti imbunatatesti dieta, sa mananci mai multe vitamine si efectul este posibil de obtinut.
+                                    personal nu am folosit.
+                                </div>
+                                <div class="clr"></div>
+                            </div>
+                        </article>
+                        <article>
+                            <div id="comm-3" class="comm">
+                                <div class="comm-avatar">
+                                    <img src="img-preland/noavatar.png" alt="">
+                                </div>
+                                <div class="comm-text">
+                                    <p class="comm-head">
+                                        blair <span>• <script language="Javascript">
+                                                dtime(-9, 1)
+                                            </script>, 20:35:01</span>
+                                        <span class="comm-reply"><a href="https://beautiful-space.tk/hairperfecta-ro/" class="commreply">Răspunde</a></span>
+                                    </p>
+                                    Am un păr distrus, în fiecare dimineață îl strâng de pe pernă, singure știți – vopsirea, îndreptarea, îngrijirea incorectă. A fost eficient pentru cineva? Să scrie
+                                    oricine are idee despre acest preparat, dar ai bine cine l-a folosit.
+                                </div>
+                                <div class="clr"></div>
+                            </div>
+                        </article>
+                        <article>
+                            <div id="comm-4" class="comm">
+                                <div class="comm-avatar">
+                                    <img src="img-preland/noavatar.png" alt="">
+                                </div>
+                                <div class="comm-text">
+                                    <p class="comm-head">
+                                        ~calina-mica <span>• <script language="Javascript">
+                                                dtime(-8, 1)
+                                            </script>, 10:56:42</span>
+                                        <span class="comm-reply"><a href="https://beautiful-space.tk/hairperfecta-ro/" class="commreply">Răspunde</a></span>
+                                    </p>
+                                    Dupa titlu ma asteptam din nou sa vad o formula secreta ieftina din hollywod, dar incolo vad niste ingrediente naturale, destul de interesant, a incercat cineva?
+                                </div>
+                                <div class="clr"></div>
+                            </div>
+                        </article>
+                        <article>
+                            <div id="comm-5" class="comm">
+                                <div class="comm-avatar">
+                                    <img src="img-preland/noavatar.png" alt="">
+                                </div>
+                                <div class="comm-text">
+                                    <p class="comm-head">
+                                        ~Domnica3 <span>• <script language="Javascript">
+                                                dtime(-8, 1)
+                                            </script>, 13:18:23</span>
+                                        <span class="comm-reply"><a href="https://beautiful-space.tk/hairperfecta-ro/" class="commreply">Răspunde</a></span>
+                                    </p>
+                                    AU ADUS REZULTATE IN CAZUL MAMEI MELE ASA CA FIECARE FEMEIE LE VA OBTINE, MAMA ASA SI-A INTARIT PARUL INCAT ACEST NU MAI CADE IAR ACUM AU INCEPUT SA CREASCA NOI
+                                    FIRE, FARA MASTI SCUMPE SAU SFATURI PROSTESTI:
+                                </div>
+                                <div class="clr"></div>
+                            </div>
+                        </article>
+                        <article>
+                            <div id="comm-6" class="comm">
+                                <div class="comm-avatar">
+                                    <img src="img-preland/noavatar.png" alt="">
+                                </div>
+                                <div class="comm-text">
+                                    <p class="comm-head">
+                                        dr_ka <span>• <script language="Javascript">
+                                                dtime(-8, 1)
+                                            </script>, 15:40:04</span>
+                                        <span class="comm-reply"><a href="https://beautiful-space.tk/hairperfecta-ro/" class="commreply">Răspunde</a></span>
+                                    </p>
+                                    Hai sa spun si eu doua vorbe. Nu demult am avut seminarii despre aceste ingrediente, si se pare ca aceste ingrediente ajuta la intarirea firelor de par de la
+                                    radacina, hranesc corespunzator firele deteriorate. In multe cazuri firele incep sa creasca din nou. Bineinteles ca importanta este si ingrijirea pielii capului.
+                                </div>
+                                <div class="clr"></div>
+                            </div>
+                        </article>
+                        <article>
+                            <div id="comm-7" class="comm">
+                                <div class="comm-avatar">
+                                    <img src="img-preland/noavatar.png" alt="">
+                                </div>
+                                <div class="comm-text">
+                                    <p class="comm-head">
+                                        C_A_L_I_A <span>• <script language="Javascript">
+                                                dtime(-7, 1)
+                                            </script>, 13:01:45</span>
+                                        <span class="comm-reply"><a href="https://beautiful-space.tk/hairperfecta-ro/" class="commreply">Răspunde</a></span>
+                                    </p>
+                                    CEVA CONCRET OAMENI BUNI. ÎMI PIERD PĂRUL CU DROAIELE ȘI CAUT O REZOLVARE EFICIENTĂ. POATE SPUNE CINEVA CINE A ÎNCERCAT CEVA CONCRET DESPRE ACEST PRODUS?
+                                </div>
+                                <div class="clr"></div>
+                            </div>
+                        </article>
+                        <article>
+                            <div id="comm-8" class="comm">
+                                <div class="comm-avatar">
+                                    <img src="img-preland/noavatar.png" alt="">
+                                </div>
+                                <div class="comm-text">
+                                    <p class="comm-head">
+                                        ~Magda <span>• <script language="Javascript">
+                                                dtime(-7, 1)
+                                            </script>luni 26.03.2022, 14:23:26</span>
+                                        <span class="comm-reply"><a href="https://beautiful-space.tk/hairperfecta-ro/" class="commreply">Răspunde</a></span>
+                                    </p>
+                                    Iau acest ulei de cateva zile si pot spune ca firele de par sunt mai dese si mai delicate la atingere. Mai putin decat promit dar sunt multumita.
+                                </div>
+                                <div class="clr"></div>
+                            </div>
+                        </article>
+                        <article>
+                            <div id="comm-9" class="comm">
+                                <div class="comm-avatar">
+                                    <img src="img-preland/noavatar.png" alt="">
+                                </div>
+                                <div class="comm-text">
+                                    <p class="comm-head">
+                                        ~d-na_mary <span>• <script language="Javascript">
+                                                dtime(-6, 1)
+                                            </script>, 11:45:07</span>
+                                        <span class="comm-reply"><a href="https://beautiful-space.tk/hairperfecta-ro/" class="commreply">Răspunde</a></span>
+                                    </p>
+                                    Pe pagina lor scrie de garantia satisfactiei. Stiti daca e adevarat? Cu adevarat parul inceteaza sa mai cada? Nu imi place sa cumpar la nimereala, nu am bani de
+                                    aruntat in stanga si in dreapta. Trebuie sa am garantia ca daca platesc, parul o sa fie ca nou. Am dat deja destul pentru intarirea lui...
+                                </div>
+                                <div class="clr"></div>
+                            </div>
+                        </article>
+                        <article>
+                            <div id="comm-10" class="comm">
+                                <div class="comm-avatar">
+                                    <img src="img-preland/noavatar.png" alt="">
+                                </div>
+                                <div class="comm-text">
+                                    <p class="comm-head">
+                                        ~Elvis_eu <span>• <script language="Javascript">
+                                                dtime(-6, 1)
+                                            </script>, 13:06:48</span>
+                                        <span class="comm-reply"><a href="https://beautiful-space.tk/hairperfecta-ro/" class="commreply">Răspunde</a></span>
+                                    </p>
+                                    Din pacate nu ma pot lauda cu efecte de lunga durata, deoarece urmez tratamentul de abia de o saptamana, dar nu veti crede, in primele 7 zile firele nu-mi mai cad!
+                                    Ei bine in sfarsit arat ca un barbat :)
+                                </div>
+                                <div class="clr"></div>
+                            </div>
+                        </article>
+                        <article>
+                            <div id="comm-11" class="comm">
+                                <div class="comm-avatar">
+                                    <img src="img-preland/noavatar.png" alt="">
+                                </div>
+                                <div class="comm-text">
+                                    <p class="comm-head">
+                                        ~Blonda <span>• <script language="Javascript">
+                                                dtime(-6, 1)
+                                            </script>, 16:28:29</span>
+                                        <span class="comm-reply"><a href="https://beautiful-space.tk/hairperfecta-ro/" class="commreply">Răspunde</a></span>
+                                    </p>
+                                    Eu folosesc regulat HairPerfecta. Am inceput de la un flacon. Firele de par sunt din ce in ce mai frumoase, se electrizeaza mai putin, chiar stralucesc putin.
+                                    Parerea mea, cel mai bun produs pentru caderea parului pe care l-am folosit vreodata. Nici un fel de efecte secundare. In plus pot spune ca nu m-am folosit de
+                                    preparate sau operatii scumpe. Recomand tuturor.
+                                </div>
+                                <div class="clr"></div>
+                            </div>
+                        </article>
+                        <article>
+                            <div id="comm-11" class="comm">
+                                <div class="comm-avatar">
+                                    <img src="img-preland/noavatar.png" alt="">
+                                </div>
+                                <div class="comm-text">
+                                    <p class="comm-head">
+                                        ~Tristan <span>• <script language="Javascript">
+                                                dtime(-6, 1)
+                                            </script>, 18:18:59</span>
+                                        <span class="comm-reply"><a href="https://beautiful-space.tk/hairperfecta-ro/" class="commreply">Răspunde</a></span>
+                                    </p>
+                                    Am auzit ca in cazul caderii parului cel mai important este dieta, dar poate ca merita de incercat ceva direct pe par, poate are ceva?
+                                </div>
+                                <div class="clr"></div>
+                            </div>
+                        </article>
+                        <article>
+                            <div id="comm-11" class="comm">
+                                <div class="comm-avatar">
+                                    <img src="img-preland/noavatar.png" alt="">
+                                </div>
+                                <div class="comm-text">
+                                    <p class="comm-head">
+                                        ~kris79 <span>• <script language="Javascript">
+                                                dtime(-6, 1)
+                                            </script>, 21:32:11</span>
+                                        <span class="comm-reply"><a href="https://beautiful-space.tk/hairperfecta-ro/" class="commreply">Răspunde</a></span>
+                                    </p>
+                                    De asemenea am folosit uleiul prezentat mai sus. Totul conform promisiunilor producatorului. Inainte timp de un an de zile imi cadea parul, si pot spune ca am
+                                    incercat de toate. Apoi am citit un material despre acest HairPerfecta. Îl aplicam zilnic si in plus am inceput sa-mi vopsesc parul din ce in ce mai rar si am pus
+                                    deoparte diferite aparate pentru indreptarea parului. Astazi ma pot lauda cu un par frumos si sexi!
+                                </div>
+                                <div class="clr"></div>
+                            </div>
+                        </article>
+                        <article>
+                            <div id="comm-12" class="comm">
+                                <div class="comm-avatar">
+                                    <img src="img-preland/noavatar.png" alt="">
+                                </div>
+                                <div class="comm-text">
+                                    <p class="comm-head">
+                                        ~vist <span>• <script language="Javascript">
+                                                dtime(-5, 1)
+                                            </script>, 11:50:10</span>
+                                        <span class="comm-reply"><a href="https://beautiful-space.tk/hairperfecta-ro/" class="commreply">Răspunde</a></span>
+                                    </p>
+                                    Ma gandesc la achizitionarea acestui produs pentru sotul mea de aceea am o intrebare scurta pentru barbati. Nu as vrea ca sotul se supere pe mine si sa creada ca
+                                    nu-mi mai place de el. Se poate supara? nu cred
+                                </div>
+                                <div class="clr"></div>
+                            </div>
+                        </article>
+                        <article>
+                            <div id="comm-13" class="comm">
+                                <div class="comm-avatar">
+                                    <img src="img-preland/noavatar.png" alt="">
+                                </div>
+                                <div class="comm-text">
+                                    <p class="comm-head">
+                                        ~domnica_hihi <span>• <script language="Javascript">
+                                                dtime(-5, 1)
+                                            </script>, 12:11:51</span>
+                                        <span class="comm-reply"><a href="https://beautiful-space.tk/hairperfecta-ro/" class="commreply">Răspunde</a></span>
+                                    </p>
+                                    Daca vei face cu cap atunci nu ar trebui sa se supere.
+                                </div>
+                                <div class="clr"></div>
+                            </div>
+                        </article>
+                        <article>
+                            <div id="comm-14" class="comm">
+                                <div class="comm-avatar">
+                                    <img src="img-preland/noavatar.png" alt="">
+                                </div>
+                                <div class="comm-text">
+                                    <p class="comm-head">
+                                        ~multumita <span>• <script language="Javascript">
+                                                dtime(-4, 1)
+                                            </script>, 13:33:32</span>
+                                        <span class="comm-reply"><a href="https://beautiful-space.tk/hairperfecta-ro/" class="commreply">Răspunde</a></span>
+                                    </p>
+                                    Imi permit sa ma bag si eu putin in discutie. Sotia mea de 44 de ani datorita acestor ingrediente naturale nu se mai simte deprimata, sau jenata (din pacate pierdea
+                                    mult par). Astazi se simte mai femeie si este mai fericita, in plus la fel am inceput sa folosesc
+                                </div>
+                                <div class="clr"></div>
+                            </div>
+                        </article>
+                        <article>
+                            <div id="comm-15" class="comm">
+                                <div class="comm-avatar">
+                                    <img src="img-preland/noavatar.png" alt="">
+                                </div>
+                                <div class="comm-text">
+                                    <p class="comm-head">
+                                        ~zambet <span>• <script language="Javascript">
+                                                dtime(-4, 1)
+                                            </script>, 16:55:13</span>
+                                        <span class="comm-reply"><a href="https://beautiful-space.tk/hairperfecta-ro/" class="commreply">Răspunde</a></span>
+                                    </p>
+                                    Fetelor, va mai mirati ca va cade parul? Daca le indopati cu diferite chimicale atunci cum credeti ca ar trebui sa fie. Incepeti prin a arunca toate produsele
+                                    chimice si folositi cosmetice naturale, fara parabeni si veti vedea care vor fi efectele. Tot nu fac parte din grupa de persoane care au un par foarte frumos si eu
+                                    am avut probleme cu caderea acestuia, dar dupa ce am inceput sa folosesc acest ulei natural am scapat de firele de par de pe podeaua din baie, dupa uscare,
+                                    pieptanat.
+                                </div>
+                                <div class="clr"></div>
+                            </div>
+                        </article>
+                        <article>
+                            <div id="comm-16" class="comm">
+                                <div class="comm-avatar">
+                                    <img src="img-preland/noavatar.png" alt="">
+                                </div>
+                                <div class="comm-text">
+                                    <p class="comm-head">
+                                        ~Carolina_P <span>• <script language="Javascript">
+                                                dtime(-4, 1)
+                                            </script>, 17:16:54</span>
+                                        <span class="comm-reply"><a href="https://beautiful-space.tk/hairperfecta-ro/" class="commreply">Răspunde</a></span>
+                                    </p>
+                                    Salut, am 29 de ani, de 2-3 ani am avut un păr mai rar, in plus parul meu se ingrasa (eram nevoita sa ma spal aproape zilnic), firele de par erau foarte subtiri,
+                                    iar bulbii practic invizibili (ma uitam la firele ce cadeau). Nu cred ca e o chestiune genetica, deoarce inainte aveam un par foarte lung si gros. In urma acestor
+                                    uleiuri firele au incetat sa mai cada. Nu-mi mai vopsesc parul si incerc sa mananc sanatos
+                                </div>
+                                <div class="clr"></div>
+                            </div>
+                        </article>
+                        <article>
+                            <div id="comm-17" class="comm">
+                                <div class="comm-avatar">
+                                    <img src="img-preland/noavatar.png" alt="">
+                                </div>
+                                <div class="comm-text">
+                                    <p class="comm-head">
+                                        ~ecou <span>• <script language="Javascript">
+                                                dtime(-3, 1)
+                                            </script>, 12:38:35</span>
+                                        <span class="comm-reply"><a href="https://beautiful-space.tk/hairperfecta-ro/" class="commreply">Răspunde</a></span>
+                                    </p>
+                                    CRED CA MA DECID. ACOLO PE PAGINA LOR SE AFLA GARANTIA SATISFACTIEI. CU ADEVARAT ASA ESTE? NU VREAU SA RISC. VA ROG SA RASPUNDETI REPEDE PENTRU CA NU AM TIMP.
+                                    TREBUIE IN 3 SAPTAMANI SA ARAT BINE PENTRU CA AM NUNTA IN FAMILIE
+                                </div>
+                                <div class="clr"></div>
+                            </div>
+                        </article>
+                        <article>
+                            <div id="comm-18" class="comm">
+                                <div class="comm-avatar">
+                                    <img src="img-preland/noavatar.png" alt="">
+                                </div>
+                                <div class="comm-text">
+                                    <p class="comm-head">
+                                        ~oanaaaa <span>• <script language="Javascript">
+                                                dtime(-3, 1)
+                                            </script>, 17:00:16</span>
+                                        <span class="comm-reply"><a href="https://beautiful-space.tk/hairperfecta-ro/" class="commreply">Răspunde</a></span>
+                                    </p>
+                                    Apasati aici pe reclama si cititi. Garanteaza satisfactia, de ce ar minti? Totul este in regulament.
+                                </div>
+                                <div class="clr"></div>
+                            </div>
+                        </article>
+                        <article>
+                            <div id="comm-19" class="comm">
+                                <div class="comm-avatar">
+                                    <img src="img-preland/noavatar.png" alt="">
+                                </div>
+                                <div class="comm-text">
+                                    <p class="comm-head">
+                                        ~kitki <span>• <script language="Javascript">
+                                                dtime(-2, 1)
+                                            </script>, 09:51:33</span>
+                                        <span class="comm-reply"><a href="https://beautiful-space.tk/hairperfecta-ro/" class="commreply">Răspunde</a></span>
+                                    </p>
+                                    Pe mine nu ma conving astfel de lucruri. Vrei sa ai un par frumos? Incepe prin a folosi sampoane bune, piapta-te inainte de somn si hai sa fim seriosi mai mergeti
+                                    pe la saloane!!!
+                                </div>
+                                <div class="clr"></div>
+                            </div>
+                        </article>
+                        <article>
+                            <div id="comm-20" class="comm">
+                                <div class="comm-avatar">
+                                    <img src="img-preland/noavatar.png" alt="">
+                                </div>
+                                <div class="comm-text">
+                                    <p class="comm-head">
+                                        ~Emilia <span>• <script language="Javascript">
+                                                dtime(-2, 1)
+                                            </script>, 10:23:11</span>
+                                        <span class="comm-reply"><a href="https://beautiful-space.tk/hairperfecta-ro/" class="commreply">Răspunde</a></span>
+                                    </p>
+                                    CINEVA SĂ RĂSPUNDA!!!!VA ROOOOGGG
+                                </div>
+                                <div class="clr"></div>
+                            </div>
+                        </article>
+                        <article>
+                            <div id="comm-19" class="comm">
+                                <div class="comm-avatar">
+                                    <img src="img-preland/noavatar.png" alt="">
+                                </div>
+                                <div class="comm-text">
+                                    <p class="comm-head">
+                                        ~Victor <span>• <script language="Javascript">
+                                                dtime(-2, 1)
+                                            </script>, 09:51:33</span>
+                                        <span class="comm-reply"><a href="https://beautiful-space.tk/hairperfecta-ro/" class="commreply">Răspunde</a></span>
+                                    </p>
+                                    Ok, aștept livrarea. Voi da informații aici peste puțin timp despre efecte.
+                                </div>
+                                <div class="clr"></div>
+                            </div>
+                        </article>
+                    </div>
+                </section>
+            </div>
+            <div id="right">
+                <h4>HEALTH-REP 8/14</h4>
+                <div class="sidebox">
+                    <img src="img-preland/magazine_health.jpg" class="imgleft">
+                    <ul class="links">
+                        <li><a href="https://beautiful-space.tk/hairperfecta-ro/">Versiuni digitale</a></li>
+                        <li><a href="https://beautiful-space.tk/hairperfecta-ro/">Health Report pe Facebook</a></li>
+                        <li><a href="https://beautiful-space.tk/hairperfecta-ro/">Vezi ce este în această ediție</a></li>
+                        <li><a href="https://beautiful-space.tk/hairperfecta-ro/">Birou Editorial</a></li>
+                        <li><a href="https://beautiful-space.tk/hairperfecta-ro/">Abonament</a></li>
+                    </ul>
+                </div>
+                <h4 class="clr">Populare</h4>
+                <div class="sidebox">
+                    <ul class="imglinks">
+                        <li class="l"><a href="https://beautiful-space.tk/hairperfecta-ro/"><img src="img-preland/farbpwanie.jpg" alt="">
+                                <p>Vopsirea părului: fă-o singură!</p>
+                            </a></li>
+                        <li class="r"><a href="https://beautiful-space.tk/hairperfecta-ro/"><img src="img-preland/rower.jpg" alt="">
+                                <p>Antrenament cardio: aerobic și intervale</p>
+                            </a></li>
+                        <li class="l"><a href="https://beautiful-space.tk/hairperfecta-ro/"><img src="img-preland/makeup.jpg" alt="">
+                                <p>Trucuri de înfrumusețare pentru orice eventualitate</p>
+                            </a></li>
+                        <li class="r"><a href="https://beautiful-space.tk/hairperfecta-ro/"><img src="img-preland/dna.jpg" alt="">
+                                <p>Cod ADN: pot fi păcălite genele rele?</p>
+                            </a></li>
+                        <li class="l"><a href="https://beautiful-space.tk/hairperfecta-ro/"><img src="img-preland/para.jpg" alt="">
+                                <p>8 pași simpli pentru a crește fertilitatea</p>
+                            </a></li>
+                        <li class="r"><a href="https://beautiful-space.tk/hairperfecta-ro/"><img src="img-preland/pop6.jpg" alt="">
+                                <p>Vacanță după sărbători. De ce merită.</p>
+                            </a></li>
+                    </ul>
+                </div>
+                <div class="facebookbox">
+                    <h5>Găsește-ne pe Facebook</h5>
+                    <div class="header">
+                        <img src="img-preland/magazine_health.jpg" style="width: 85px;"> <a href="https://beautiful-space.tk/hairperfecta-ro/" class="name">Health Report România</a>
+                        <div class="containsocial">
+                            <div class="facebookbutton left">Îmi place!</div>
+                        </div>
+                        <div class="clr"></div>
+                    </div>
+                    <hr>
+                    <div class="contain">
+                        <span class="fblikesbox">2273</span> persoane apreciază <a href="https://beautiful-space.tk/hairperfecta-ro/" class="name">Health Report România</a>
+                        <br>
+                        <img src="img-preland/pictures.jpg" style="margin-top: 4px;">
+                    </div>
+                    <hr>
+                    <div class="contain">
+                        <p class="fbicon">
+                            Facebook Social Plugin
+                        </p>
+                    </div>
+                </div>
+                <a id="adrek" href="https://beautiful-space.tk/hairperfecta-ro/">
+                    <div class="slogan">Ofertă specială!</div>
+                    <img style="width:220px;;" src="img-preland/vitahairmax_small.png" alt="">
+                    <div class="button">vezi »</div>
+                </a>
+            </div>
+        </article>
+    </div>
+    <footer id="footer" class="clr" style="height:auto;">
+        <div class="inner" style="background:transparent;height:auto;">
+            <div class="left">
+                <img src="img-preland/logo.png" style="margin-top:10px;">
+            </div>
+            <div class="right">
+                Toate drepturile rezervate © 2022 Health Report Magazine
+            </div>
+            <div style="clear:both;"></div>
+        </div>
+    </footer>
+    <style>
+        /* The Modal (background) */
+        .TOS_modal,
+        .PRIV_modal {
+            display: none;
+            /* Hidden by default */
+            position: fixed;
+            /* Stay in place */
+            z-index: 9999;
+            /* Sit on top */
+            padding-top: 100px;
+            /* Location of the box */
+            left: 0;
+            top: 0;
+            width: 100%;
+            /* Full width */
+            height: 100%;
+            /* Full height */
+            overflow: auto;
+            /* Enable scroll if needed */
+            background-color: rgb(0, 0, 0);
+            /* Fallback color */
+            background-color: rgba(0, 0, 0, 0.4);
+            /* Black w/ opacity */
+        }
+
+        /* Modal Content */
+        .TOS_modal-content,
+        .PRIV_modal-content {
+            background-color: #fefefe;
+            margin: auto;
+            padding: 20px;
+            border: 1px solid #888;
+            width: 80%;
+            max-height: 500px;
+            overflow: auto;
+            text-align: left !important;
+        }
+
+        .TOS_modal-content ul,
+        .PRIV_modal-content ul {
+            list-style: circle inside initial !important;
+        }
+
+        .TOS_modal-content ul li,
+        .PRIV_modal-content ul li {
+            font-size: 14px;
+            line-height: 150%;
+        }
+
+        /* The Close Button */
+        .TOS_close,
+        .PRIV_close {
+            cursor: pointer;
+            color: #aaaaaa;
+            float: right;
+            font-size: 28px;
+            font-weight: bold;
+        }
+
+        .TOS_close:hover,
+        .PRIV_close:hover .TOS_close:focus,
+        .PRIV_close:focus {
+            color: #000;
+            text-decoration: none;
+            cursor: pointer;
+        }
+
+        .TOS_legalfooter,
+        .PRIV_legalfooter {
+            text-align: center !important;
+            padding: 5px;
+            font-size: 12px !important;
+            z-index: 9999;
+        }
+
+        .TOS_legalfooter span,
+        .PRIV_legalfooter {
+            cursor: pointer;
+        }
+    </style>
+
+    <div id="TOS_CONTAINER" class="TOS_modal">
+
+        <div class="TOS_modal-content">
+            <span class="TOS_close" id="TOS_CLOSE_BUTTON">&times;</span>
+            <p class="p1"><strong>Terms &amp; Conditions</strong></p>
+            <p class="p1">These Terms and Conditions govern your use of and your relationship with of all the websites owned and run by Global Beauty Stores Ltd. (&ldquo;we/us&rdquo;). Please read
+                these Terms and Conditions and our Privacy Policy carefully before using the Site as they affect your rights and liabilities under the law. If you do not agree to these Terms and
+                Conditions, please do not register for or use the Site. In these Terms and Conditions and in our Privacy Policy "we ", "us" and "our" means these websites and "you" means the
+                individual who is using the Site.</p>
+            <p class="p1"><strong>1. Use of The Site</strong></p>
+            <p class="p1">The Site is provided to you free of charge for your personal use subject to these Terms and Conditions. By using the Site you agree to be bound by these Terms and Conditions.
+                This site may include ADVERTORIAL materials, sponsored reviews, fictional characters and statements to support advertising.</p>
+            <p class="p1">THESE TERMS AND CONDITIONS DO NOT AFFECT YOUR STATUTORY RIGHTS.</p>
+            <p class="p1"><strong>2. Amendments</strong></p>
+            <p class="p1">We may update these Terms and Conditions from time to time and any changes will be notified to you via a suitable announcement on the Site. The changes will apply to the use
+                of the Site after we have given notice. If you do not wish to accept the new Terms and Conditions you should not continue to use the Site. If you continue to use the Site after the
+                date the change comes into effect, your use of the Site indicates your agreement to be bound by the new Terms and Conditions.</p>
+            <p class="p1"><strong>3. Availability of the Site</strong></p>
+            <p class="p1">Although we aim to offer you the best service possible, we make no promise that the services at the Site will meet your requirements. We cannot guarantee that the service
+                will be fault free.</p>
+            <p class="p1">Your access to the Site may be occasionally restricted to allow for repairs, maintenance or the introduction of new facilities or services. We will attempt to minimise the
+                periods during which access to the Site is restricted for these reasons.</p>
+            <p class="p1"><strong>4. Excluded Services</strong></p>
+            <p class="p1">The services provided by the Site do not include the provision of computer or other necessary equipment to access the Site. To use the Site you will require Internet
+                connectivity and appropriate telecommunications links. We shall not be liable for any telephone or other costs that you may incur.</p>
+            <p class="p1"><strong>5. Our Intellectual Property Rights</strong></p>
+            <p class="p1">We, or people we have contracted with, own or are licensed to use all the copyright, database rights or similar rights and information within the Site. You may use the
+                information and reproduce it in hard copy for your personal non-commercial use and reference only. Except where you are using a feature of the Site, such as "e-mail a friend", for
+                personal non-commercial use and reference only, the information on the Site may not otherwise be reproduced, distributed or transmitted to any other person or incorporated in any way
+                into another document or other material without our prior written approval. Any hard copies you make must retain all copyright and proprietary notices. You must not alter or try to
+                alter any words, data, image or other item on the Site other than those items that are intended to be completed or changed by you.</p>
+            <p class="p1"><strong>6. Limitations</strong></p>
+            <p class="p1">You may not use the Site for any of the following purposes:</p>
+            <p class="p1">* Disseminating any unlawful, harassing, libellous, abusive, threatening, harmful, vulgar, obscene, otherwise objectionable material;</p>
+            <p class="p1">* Transmitting material that encourages conduct that constitutes a criminal offence, results in civil liability or otherwise breaches any relevant laws, regulations or codes
+                of practice;</p>
+            <p class="p1">* Gaining unauthorised access to other computer systems;</p>
+            <p class="p1">* Interfering with any other person's use or enjoyment of the Site;</p>
+            <p class="p1">* Breaching any laws concerning the use of public telecommunications networks;</p>
+            <p class="p1">* Interfering or disrupting networks or web sites connected to the Site; and</p>
+            <p class="p1">* Making, transmitting or storing electronic copies of the materials protected by copyright without the permission of the owner.</p>
+            <p class="p1">You will indemnify us against all losses, liabilities, costs and expenses reasonably suffered or incurred by us, all damages awarded against us under any judgement by a court
+                of competent jurisdiction and all settlement sums paid by us as a result of any settlement agreed by us arising out of or in connection with:</p>
+            <p class="p1">* Any claim by any third party that the use of the Site by you is defamatory, offensive or abusive, or of an obscene or pornographic nature, or is illegal or constitutes a
+                breach of any applicable law, regulation or code of practice;</p>
+            <p class="p1">* Any claim by any third party that the use of the Site by you infringes that third party's copyright or other intellectual property rights of whatever nature; and</p>
+            <p class="p1">* Any fines or penalties imposed by any regulatory, advertising or trading body or authority in connection with the use of the Site by you.</p>
+            <p class="p1"><strong>7. Our Liability</strong></p>
+            <p class="p1">The Site is provided by us without any warranties or guarantees. You must bear the risks associated with the use of the Internet.</p>
+            <p class="p1">The Site provides content from other Internet sites or resources and while we try to ensure that the material included on the Site is correct, reputable and of high quality,
+                it cannot accept responsibility if this is not the case.</p>
+            <p class="p1">We will not be responsible for any errors or omissions or for results obtained from the use of such information or for any technical problems you may experience with the
+                Site. If we are informed of any inaccuracies in the material on the Site we will attempt to correct the inaccuracies as soon as we reasonably can.</p>
+            <p class="p1">In particular, we disclaim all liabilities in connection with the following:</p>
+            <p class="p1">* Incompatibility of the Site with any of your equipment, software or telecommunications links;</p>
+            <p class="p1">* Technical problems including errors or interruptions of the Site;</p>
+            <p class="p1">* Unsuitability, unreliability or inaccuracy of the Site; and</p>
+            <p class="p1">* Inadequacy of the Site to meet your requirements.</p>
+            <p class="p1">You agree that we will not be liable to you/or any third party for any consequential or incidental damages (including but not limited to loss of revenue, loss of profits,
+                loss of privacy and loss of data) or any other indirect, special or punitive damages whatsoever that arise out of or are related to the Site.</p>
+            <p class="p1">Nothing in these Terms and Conditions shall exclude our liability for personal injury or death caused by its negligence.</p>
+            <p class="p1"><strong>8. Advertising and Sponsorship</strong></p>
+            <p class="p1">Part of the Site may contain advertising and sponsorship. Advertisers and Sponsors are responsible for ensuring that material submitted for inclusion on the Site complies
+                with relevant laws and codes. We will not be responsible for any error or inaccuracy in advertising and sponsorship.</p>
+            <p class="p1"><strong>9. Miscellaneous</strong></p>
+            <p class="p1">You may not assign, sub-license or otherwise transfer any of your rights under these Terms and Conditions.</p>
+            <p class="p1">If any provision of these Terms and Conditions is found to be invalid by any court having competent jurisdiction, the invalidity of that provision will not affect the
+                validity of the remaining provisions of these Terms and Conditions, which shall remain in full force and effect.</p>
+            <p class="p1">We shall not be responsible for any breach of these Terms and Conditions caused by circumstances beyond its control.</p>
+            <p class="p1">A person who is not a party to these Terms and Conditions shall have no right under the Contract (Rights of Third Parties) Act 1999 to enforce any term of these Terms and
+                Conditions but this shall not affect any right to remedy of a third party which exists or is available apart from the Act.</p>
+            <p class="p1">The Site is owned and operated by Global Beauty Stores Ltd, Mahe, Victoria &ndash; Seychelles. </p>
+            <p class="p1"><strong>Legal information and how to contact us</strong></p>
+            <p class="p1">Under the EU General Data Protection Regulation (GDPR) &ndash; if you are willing to make any registrations where you submit your personal data &ndash; IT IS WITH YOUR FULL
+                CONSENT and we will process it further in order to fulfill your request for further information about a product or deliver an order that you might have requested from us. </p>
+            <div>&nbsp;</div>
+        </div>
+    </div>
+
+    <div id="PRIV_CONTAINER" class="PRIV_modal">
+
+        <div class="PRIV_modal-content">
+            <span class="PRIV_close" id="PRIV_CLOSE_BUTTON">&times;</span>
+            <p><b>PRIVACY POLICY</b></p>
+            <p>
+            </p>
+            <p>This Privacy Policy is applicable to the publications, businesses, websites and mobile applications operated by Global Beauty Stores Ltd., including the Website from which you accessed
+                this Privacy Policy (our websites and mobile applications are collectively referred to as “Websites”). It also applies to the related online services that we provide through our
+                Websites and mobile apps (the "Services").</p>
+            <p>
+            </p>
+            <p>By using the Websites and/or the Services and providing us with Personal Information, you agree to the practices described in this Privacy Policy and the Cookie Policy referenced below
+                and to the updates to these policies posted here from time to time. To make sure you stay informed of all changes, you should check these policies periodically. Updates will be
+                referenced by the "Last Updated" date shown above.</p>
+            <p>
+            </p>
+            <p>
+            </p>
+            <p><b>1. DEFINITION OF PERSONAL INFORMATION</b></p>
+            <p>For purposes of this Privacy Policy, unless a different definition is noted in a particular instance, "Personal Information" means information that identifies, relates to, describes,
+                references, or is reasonably capable of being associated with a particular consumer or device.</p>
+            <p>
+            </p>
+            <p><b>2. PERSONAL INFORMATION WE COLLECT</b></p>
+            <p>
+            </p>
+            <p>We may collect the following types of Personal Information about you as described below:</p>
+            <ul>
+                <li>(A) Personal Information you provide to us,</li>
+                <li>(B) Personal Information we may automatically collect, and</li>
+                <li>(C) Personal Information we may receive from third parties.</li>
+            </ul>
+            <p></p>
+            <p>A. Personal Information You Provide to Us</p>
+            <ul>
+                <li>In using our Websites or Services, you may provide us with Personal Information, which may include (the examples provided are illustrative and not intended to be exhaustive):</li>
+                <li>Contact information such as name, email address, postal address and telephone number(s);</li>
+                <li>Demographic information such as birth date or gender;</li>
+                <li>Account information and log in credentials, including unique identifiers such as username and password;</li>
+                <li>Payment and transaction information including credit or bank card information;</li>
+                <li>Preferences for communications;</li>
+                <li>Communications and opinions in chat rooms, message boards, forums, surveys, polls, and online forms;</li>
+                <li>Access to your geo-location (including through our mobile app) or to other data held on social media platforms and other software (for example, access to your contacts, calendar or
+                    photos);</li>
+                <li>Photos and/or videos; and</li>
+                <li>Additional information as otherwise described to you at the point of collection or pursuant to your consent.</li>
+            </ul>
+            <p></p>
+            <p>B. Personal Information We May Automatically Collect About You</p>
+            <p>Our Websites and Services may automatically collect certain Personal Information about you. This Personal Information may include (the examples provided are illustrative and not
+                intended to be exhaustive):</p>
+            <ul>
+                <li>IP address, which is the number associated with the service through which you access the Internet, such as through your ISP (Internet service provider);</li>
+                <li>Date and time of your visit or use of our Websites or Services;</li>
+                <li>Domain server from which you are using our Websites or Services;</li>
+                <li>Type of computer, web browsers, search engine used, operating system, or platform you use;</li>
+                <li>Data identifying the web pages you visited prior to and after visiting our Websites or using our Services;</li>
+                <li>Your movement and activity within the website, which is aggregated with other Personal information;</li>
+                <li>Geo-location information through the use of any of our mobile applications;</li>
+                <li>Mobile device information, including the type of device you use, operating system version, and the device identifier (or “UDID”); and</li>
+                <li>Mobile application identification and behavior, use, and aggregated usage, performance data, and where the application was downloaded from.</li>
+            </ul>
+            <p></p>
+            <p>C. Personal Information We May Receive from Third Parties</p>
+            <p>
+            </p>
+            <p>We may collect additional Personal Information about you from third-party websites, social media platforms, such as, but not limited, to Facebook, Twitter, Instagram, SnapChat (“Social
+                Media Platforms”), third party data providers, and sources providing publicly-available Personal information (e.g., from the U.S. postal service) for the purposes described in Section
+                3 below.</p>
+            <ul>
+                <li>Personal Information we may access from Social Media Platforms may include, but is not limited to:</li>
+                <li>
+                </li>
+                <li>Your Social Media Platform login information</li>
+                <li>Your location data</li>
+                <li>Your profile information</li>
+                <li>Your list of contacts, friends or followers</li>
+                <li>Certain Personal Information about your activities on the Social Media Platform</li>
+            </ul>
+            <p></p>
+            <p>Please keep in mind that when you provide Personal Information to us on a third-party website or platform (for example, via our applications), the Personal Information you provide may
+                be separately collected by the third-party website or the Social Media Platform. Please review the privacy policies of the applicable third party website or Social Media Platform for
+                their privacy practices.</p>
+            <p>
+            </p>
+            <p><b>3. HOW WE USE PERSONAL INFORMATION</b></p>
+            <p>A. Use and Purpose of Processing Your Personal Information</p>
+            <p>We use and process your Personal Information for the following types of purposes (the examples provided are illustrative and not intended to be exhaustive).</p>
+            <ul>
+                <li>To provide you with the Websites and Services, and related promotions, newsletters and information you request</li>
+                <li>To respond to your inquiries and provide you with requested information and other communications, including by email or text messages, and including alerts, notification of
+                    promotions, contests, and events</li>
+                <li>For marketing and advertising purposes, including sending you promotional material or special offers on our behalf or on behalf of our marketing partners and/or their respective
+                    affiliates and other third parties, provided that you have not already opted-out of receiving such communications</li>
+                <li>For billing and payment processing</li>
+                <li>To deliver personalized advertising and content</li>
+                <li>To fulfill contracts we have with you</li>
+                <li>To manage, improve and foster relationships with third-party service providers, including vendors, suppliers, and parents, affiliates, subsidiaries, and business partners</li>
+                <li>To maintain, improve, customize, or administer the Websites and Services, perform business analyses, or other internal purposes to improve the quality of our business, the Websites
+                    and the Services, resolve technical problems, or improve security or develop other products and services</li>
+                <li>To comply with our Terms of Service</li>
+                <li>To perform analytics for business purposes and business intelligence, such as monitoring traffic to our Websites, counting ad impressions, and auditing legal and regulatory
+                    compliance</li>
+                <li>To maintain the safety, security, and integrity of our Websites, products and Services, databases and other technology assets and our business, including preventing fraud,
+                    detecting security breaches and prosecuting violators</li>
+                <li>To identify and repair errors in our Websites' functionality</li>
+                <li>To evaluate or conduct a merger, divestiture, restructuring, reorganization, dissolution, or other sale or transfer of some or all of our assets, in which Personal Information we
+                    hold is among the assets transferred</li>
+                <li>To comply with any applicable laws and regulations and respond to lawful requests; and/or</li>
+                <li>For any other purposes disclosed to you at the time we collect your Personal Information and/or pursuant to your consent</li>
+            </ul>
+            <p></p>
+            <p>If we decide to use the Personal Information for materially different purposes, we will update this Privacy Policy.</p>
+            <p>
+            </p>
+            <p>
+            </p>
+            <p>B. Disclosing Your Personal Information to Other Parties</p>
+            <p>We may disclose your Personal Information to other parties, including:</p>
+            <ul>
+                <li>Our affiliates</li>
+                <li>Service providers</li>
+                <li>Advertisers, advertising technology companies, analytics companies and other third parties with whom we have business relationships</li>
+                <li>Government regulators</li>
+                <li>Our legal advisors and parties involved in a legal process</li>
+                <li>To an entity involved in the sale of our business</li>
+                <li>Third parties to whom you or your agents authorize us to disclose your Personal Information in connection with products or Services we provide to you</li>
+            </ul>
+            <p></p>
+            <p>In order to provide advertisements and content that are more relevant to you, we and our advertising and content providers may collect Personal Information when you use our Websites
+                (such as the IP address of your device, the identifier on your mobile device, or cookies stored on your device), and may share the information we collect with third parties. Please see
+                our Cookie Policy for more information.</p>
+            <p>
+            </p>
+            <p>If we decide to disclose Personal Information to additional categories of parties, we will update this Privacy Policy.</p>
+            <p>
+            </p>
+            <p>
+            </p>
+            <p><b>4. DO WE USE "COOKIES"?</b></p>
+            <p>
+            </p>
+            <p>Yes. Cookies and similar technologies are small files that a website or its service provider transfers to a computer's hard drive through a Web browser (if the user allows) that enables
+                the website's or service provider's systems to recognize the user's browser and capture and remember certain information.</p>
+            <p>
+            </p>
+            <p>In general, we and our third party providers and advertisers, use cookies and other technologies to optimize the functionality of the Websites, to help us understand how the Websites
+                are used and to provide users with interest-based content or advertising based upon their browsing activities and interests.</p>
+            <p>
+            </p>
+            <p>
+            </p>
+            <p><b>5. THIRD PARTY LINKS</b></p>
+            <p>
+            </p>
+            <p>Our Websites or Services may contain links to other websites or services that are not owned or controlled by us, including links to social media platforms, or may redirect you off our
+                Website or away from our Services to other websites for information or other services. This Privacy Policy only applies to information collected by our Websites and Services. We are
+                not responsible for the privacy and security practices of those other websites or social media platforms or the information they may collect (which may include IP address). You should
+                refer to such third parties' privacy policies on their sites to determine their respective privacy practices. Links to any other website’s or content do not constitute or imply an
+                endorsement or recommendation by us of the linked website, social media platform, and/or content.</p>
+        </div>
+    </div>
+    
+
+
+</body>
+
+<script>
+
+    document.addEventListener("DOMContentLoaded", function () {
+       Array.prototype.forEach.call(document.querySelectorAll('a'), function (item) {
+          item.setAttribute('href', item.getAttribute('href') + location.search);
+       })
+    });
+  
+  </script>
+
+</html>
