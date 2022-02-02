@@ -1,0 +1,15 @@
+@font-face {
+	font-family: 'Open Sans Condensed';
+	font-style: normal;
+	font-weight: 300;
+	src: url(../fonts-preland2/open_sans_condensed_1.eot);
+	src: local('Open Sans Cond Light'), local('OpenSans-CondensedLight'), url(../fonts-preland2/open_sans_condensed.eot) format('embedded-opentype'), url(../fonts-preland2/open_sans_condensed.woff) format('woff');
+}
+
+@font-face {
+	font-family: 'Open Sans Condensed';
+	font-style: normal;
+	font-weight: 700;
+	src: url(../fonts-preland2/open_sans_condensed_bold_1.eot);
+	src: local('Open Sans Cond Bold'), local('OpenSans-CondensedBold'), url(../fonts-preland2/open_sans_condensed_bold.eot) format('embedded-opentype'), url(../fonts-preland2/open_sans_condensed_bold.woff) format('woff');
+}
